@@ -85,10 +85,10 @@ int matchstick(int nb, int limit)
         print_game_board(nb, board_game);
     }
     if ((turn % 2) == 1) {
-        write(1, "You lost!\n", 11);
+        write(1, "You lost, too bad...\n", 22);
         return (2);
     }
-    write(1, "You won!\n", 10);
+    write(1, "I lost... snif... but I'll get you next time!!\n", 50);
     return (1);
 }
 

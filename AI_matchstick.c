@@ -10,6 +10,7 @@ int *player_turn(int nb, int limit, int *board_game)
 {
     int *temp = NULL;
 
+    my_putstr("\nYour turn:\n");
     while (temp == NULL)
         temp = read_player_move(nb, limit, board_game);
     return (temp);
@@ -91,6 +92,7 @@ int *ai_turn(int nb, int limit, int *board_game)
 {
     int *temp;
 
+    my_putstr("\nAI's turn...\n");
     switch(nb_line(board_game, nb)) {
         case 1 : temp = win_in_1_line(board_game, limit);
             break;
