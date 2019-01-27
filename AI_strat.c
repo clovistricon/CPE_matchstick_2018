@@ -56,7 +56,7 @@ int *win_in_2_lines(int *board_game, int limit)
     else if (board_game[line1] > board_game[line2])
         board_game[line1] = two_l(board_game[line1], board_game[line2], limit);
     else
-        board_game[line1] = two_l(board_game[line1], board_game[line2], limit);
+        board_game[line1] = two_l(board_game[line2], board_game[line1], limit);
     return (board_game);
 }
 

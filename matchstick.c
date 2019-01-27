@@ -74,6 +74,7 @@ int matchstick(int nb, int limit)
     int lines;
     int turn = 0;
 
+    print_game_board(nb, board_game);
     while ((lines = nb_line(board_game, nb)) >= 0) {
         board_game = player_turn(nb, limit, board_game);
         turn++;
