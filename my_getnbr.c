@@ -4,6 +4,7 @@
 ** File description:
 ** task05
 */
+#include "my.h"
 
 int my_pow(int p)
 {
@@ -25,6 +26,8 @@ int my_getnbr(char const *str)
     int b;
     int s;
 
+    if (str[0] == '\n')
+        return (0);
     for (; (str[a] < 48) || (str[a] > 57); a = a + 1);
     b = a;
     s = a;

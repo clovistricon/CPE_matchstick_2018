@@ -21,9 +21,13 @@ int *read_player_move(int nb, int limit, int *board_game)
     size_t size = 10;
     int line;
     int nb_matches;
+    int *error_board = malloc(sizeof(int) * 2);
 
+    error_board[0] = -1;
     my_putstr("Line: ");
     getline(&buff, &size, stdin);
+    if (*buff == 0)
+        return (error_board);
     line = my_getnbr(buff);
     free(buff);
     if ((line <= 0) || (line > nb)) {
@@ -77,6 +81,8 @@ int matchstick(int nb, int limit)
     print_game_board(nb, board_game);
     while ((lines = nb_line(board_game, nb)) >= 0) {
         board_game = player_turn(nb, limit, board_game);
+        if (board_game == NULL)
+            return (0);
         turn++;
         print_game_board(nb, board_game);
         if (nb_line(board_game, nb) == -1)
@@ -103,7 +109,7 @@ int main(int ac, char **av)
         nb = my_getnbr(av[1]);
         limit = my_getnbr(av[2]);
         if (((nb <= 1) || (nb > 99)) || (limit <= 0)) {
-            write(2, "Error: Bad arguments\n", 22);
+            my_putstr("Error: Bad arguments\n");
             return (84);
         }
         result = matchstick(nb, limit);
