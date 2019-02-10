@@ -26,7 +26,7 @@ int my_getnbr(char const *str)
     int b;
     int s;
 
-    if (str[0] == '\n')
+    if (str[0] == '\0')
         return (0);
     for (; (str[a] < 48) || (str[a] > 57); a = a + 1);
     b = a;

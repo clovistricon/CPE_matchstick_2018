@@ -6,19 +6,6 @@
 */
 #include "my.h"
 
-int *player_turn(int nb, int limit, int *board_game)
-{
-    int *temp = NULL;
-
-    my_putstr("\nYour turn:\n");
-    while (temp == NULL) {
-        temp = read_player_move(nb, limit, board_game);
-        if ((temp != NULL) && (temp[0] == -1))
-            return (NULL);
-    }
-    return (temp);
-}
-
 int nb_line(int *board_game, int nb)
 {
     int lines = 0;

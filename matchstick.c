@@ -15,42 +15,6 @@ int *set_board_game(int nb)
     return (board_game);
 }
 
-int *read_player_move(int nb, int limit, int *board_game)
-{
-    char *buff = malloc(sizeof(char) * 11);
-    size_t size = 10;
-    int line;
-    int nb_matches;
-    int *error_board = malloc(sizeof(int) * 2);
-
-    error_board[0] = -1;
-    my_putstr("Line: ");
-    getline(&buff, &size, stdin);
-    if (*buff == 0)
-        return (error_board);
-    line = my_getnbr(buff);
-    free(buff);
-    if ((line <= 0) || (line > nb)) {
-        my_putstr("Error: this line is out of range\n");
-        return (NULL);
-    }
-    my_putstr("Matches: ");
-    buff = malloc(sizeof(char) * 11);
-    getline(&buff, &size, stdin);
-    nb_matches = my_getnbr(buff);
-    free(buff);
-    if ((nb_matches <= 0) || (nb_matches > limit)) {
-        my_putstr("Error: you have to remove at least one matches\n");
-        return (NULL);
-    }
-    else if (nb_matches > board_game[line - 1]) {
-        my_putstr("Error: not enough matches on this line\n");
-        return (NULL);
-    }
-    board_game[line - 1] = board_game[line - 1] - nb_matches;
-    return (board_game);
-}
-
 void print_game_board(int nb, int const *board_game)
 {
     for (int a = 0; a <= (nb * 2); a = a + 1)
@@ -72,31 +36,38 @@ void print_game_board(int nb, int const *board_game)
     my_putchar('\n');
 }
 
+int give_result(int turn)
+{
+    if ((turn % 2) == 1) {
+        my_putstr("You lost, too bad...\n");
+        return (2);
+    }
+    my_putstr("I lost... snif... but I'll get you next time!!\n");
+    return (1);
+}
+
 int matchstick(int nb, int limit)
 {
     int *board_game = set_board_game(nb);
     int lines;
     int turn = 0;
+    int result;
 
     print_game_board(nb, board_game);
     while ((lines = nb_line(board_game, nb)) >= 0) {
         board_game = player_turn(nb, limit, board_game);
         if (board_game == NULL)
             return (0);
-        turn++;
+        turn = turn + 1;
         print_game_board(nb, board_game);
         if (nb_line(board_game, nb) == -1)
             break;
         board_game = ai_turn(nb, limit, board_game);
-        turn++;
+        turn = turn + 1;
         print_game_board(nb, board_game);
     }
-    if ((turn % 2) == 1) {
-        write(1, "You lost, too bad...\n", 22);
-        return (2);
-    }
-    write(1, "I lost... snif... but I'll get you next time!!\n", 50);
-    return (1);
+    result = give_result(turn);
+    return (result);
 }
 
 int main(int ac, char **av)
@@ -109,7 +80,7 @@ int main(int ac, char **av)
         nb = my_getnbr(av[1]);
         limit = my_getnbr(av[2]);
         if (((nb <= 1) || (nb > 99)) || (limit <= 0)) {
-            my_putstr("Error: Bad arguments\n");
+            write(2, "Error: Bad arguments\n", 22);
             return (84);
         }
         result = matchstick(nb, limit);
