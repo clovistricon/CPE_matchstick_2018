@@ -26,12 +26,36 @@ int nb_line(int *board_game, int nb)
     return (0);
 }
 
+int nmatches_in_too_many_line(int lmax, int lines, int limit, int lines_1)
+{
+    if (((lines - lines_1) == 1) && ((lines % 2) == 0)) {
+        if (lmax <= (limit + 1))
+            return (1);
+        if (lmax == (limit + 2))
+            return (lmax);
+        else if (lmax > ((limit * 2) + 1))
+            return (lmax - limit);
+        else
+            return (limit + 2);
+    }
+    else if ((lines - lines_1) == 1) {
+        if (lmax <= limit)
+            return (0);
+        else if (lmax > (limit * 2))
+            return (lmax - limit);
+        else
+            return (limit + 1);
+    }
+    return (lmax);
+}
+
 int *too_many_1_matches_line(int *board_game, int nb, int limit)
 {
     int lines = 0;
     int lines_1 = 0;
     int l_of_1 = 0;
     int lmax = 0;
+    int memo;
 
     for (int i = 0; i < nb; i = i + 1) {
         lines = ((board_game[i] > 0) ? (lines + 1) : (lines));
@@ -39,26 +63,11 @@ int *too_many_1_matches_line(int *board_game, int nb, int limit)
         l_of_1 = ((board_game[i] == 1) ? (i) : (l_of_1));
         lmax = ((board_game[i] > board_game[lmax]) ? (i) : (lmax));
     }
-    if (((lines - lines_1) == 1) && ((lines % 2) == 0)) {
-        if (board_game[lmax] <= (limit + 1))
-            board_game[lmax] = 1;
-        else if (board_game[lmax] == (limit + 2))
-            board_game[l_of_1] = 0;
-        else if (board_game[lmax] > ((limit * 2) + 1))
-            board_game[lmax] = board_game[lmax] - limit;
-        else
-            board_game[lmax] = limit + 2;
-    }
-    else if ((lines - lines_1) == 1) {
-        if (board_game[lmax] <= limit)
-            board_game[lmax] = 0;
-        else if (board_game[lmax] > (limit * 2))
-            board_game[lmax] = board_game[lmax] - limit;
-        else
-            board_game[lmax] = limit + 1;
-    }
+    memo = nmatches_in_too_many_line(board_game[lmax], lines, limit, lines_1);
+    if (memo == board_game[lmax])
+        board_game[l_of_1] = memo;
     else
-        board_game[l_of_1] = 0;
+        board_game[lmax] = memo;
     return (board_game);
 }
 

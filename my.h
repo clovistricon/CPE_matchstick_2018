@@ -26,6 +26,7 @@ int player_line(int nb);
 int player_matches(int line, int limit, int *board_game);
 int *player_turn(int nb, int limit, int *board_game);
 void print_game_board(int nb, int const *board_game);
+int nmatches_in_too_many_line(int lmax, int lines, int limit, int lines_1);
 int *too_many_1_matches_line(int *board_game, int nb, int limit);
 int *random_line(int *board_game, int nb, int limit);
 int *win_in_1_line(int *board_game, int limit);
