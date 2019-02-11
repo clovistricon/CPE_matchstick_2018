@@ -21,7 +21,7 @@ int nb_line(int *board_game, int nb)
         return (-1);
     if (lines <= 3)
         return (lines);
-    else if (lines_1 > lines)
+    else if (lines_1 > (lines / 2))
         return (4);
     return (0);
 }
@@ -29,18 +29,22 @@ int nb_line(int *board_game, int nb)
 int nmatches_in_too_many_line(int lmax, int lines, int limit, int lines_1)
 {
     if (((lines - lines_1) == 1) && ((lines % 2) == 0)) {
-        if (lmax <= (limit + 1))
-            return (1);
-        if (lmax == (limit + 2))
-            return (lmax);
+        my_putchar('b');
+        if (lmax <= (limit + 2))
+            return (((lmax == (limit + 2)) ? (lmax) : (1)));
+        //if (lmax == (limit + 2))
+        //    return (lmax);
         else if (lmax > ((limit * 2) + 1))
             return (lmax - limit);
         else
             return (limit + 2);
     }
     else if ((lines - lines_1) == 1) {
-        if (lmax <= limit)
-            return (0);
+        my_putchar('a');
+        if (lmax <= (limit + 1))
+            return (((lmax == (limit + 1)) ? (lmax) : (0)));
+        //if (lmax == (limit + 1))
+        //    return (lmax);
         else if (lmax > (limit * 2))
             return (lmax - limit);
         else
@@ -63,6 +67,7 @@ int *too_many_1_matches_line(int *board_game, int nb, int limit)
         l_of_1 = ((board_game[i] == 1) ? (i) : (l_of_1));
         lmax = ((board_game[i] > board_game[lmax]) ? (i) : (lmax));
     }
+    my_putchar('c');
     memo = nmatches_in_too_many_line(board_game[lmax], lines, limit, lines_1);
     if (memo == board_game[lmax])
         board_game[l_of_1] = 0;
