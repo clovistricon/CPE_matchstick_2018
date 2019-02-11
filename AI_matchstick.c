@@ -65,7 +65,7 @@ int *too_many_1_matches_line(int *board_game, int nb, int limit)
     }
     memo = nmatches_in_too_many_line(board_game[lmax], lines, limit, lines_1);
     if (memo == board_game[lmax])
-        board_game[l_of_1] = memo;
+        board_game[l_of_1] = 0;
     else
         board_game[lmax] = memo;
     return (board_game);
