@@ -8,19 +8,23 @@
 
 int two_l(int line1, int line2, int limit)
 {
-    int n = 1;
+    int n = 0;
     int diff = line1 - line2;
 
     if (line2 == 1)
-        n = 0;
+        n = 1;
     if (diff <= (limit - n))
-        return ((line2 - 1) + n);
+        return (line2 - n);
     if (diff == ((limit - n) + 1))
         return (line1 - 1);
-    if ((diff > ((limit - n) + 1)) && (diff < ((limit * 2) - n)))
+    if ((diff > ((limit - n) + 1)) && (diff < (((limit * 2) - n) + 1)));
         return (line2 + ((limit - n) + 1));
-    else if (diff >= ((limit * 2) - n))
-        return (line1 - (limit - n));
+    else if (diff >= (((limit * 2) - n) + 1)) {
+        if (diff == (limit * 2))
+            return (line1 - (limit - 1));
+        else
+            return (line1 - (limit - n));
+    }
     return (0);
 }
 
