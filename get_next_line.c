@@ -12,6 +12,8 @@ char *my_strcpy(char const *src)
     int len;
     char *dest;
 
+    if (src == NULL)
+        return (NULL);
     for (len = 0; src[len] != '\0'; len = len + 1);
     dest = malloc(sizeof(char) * (len + 1));
     while (src[a] != '\0') {
@@ -46,17 +48,6 @@ char *my_strcat(char *dest, char const *src)
     return (fuse);
 }
 
-int my_strlen(char const *sbuff)
-{
-    int a = 0;
-
-    if (sbuff == NULL)
-        return (0);
-    while (sbuff[a] != '\0')
-        a = a + 1;
-    return (a);
-}
-
 int my_end(char const *sbuff)
 {
     if (sbuff == NULL)
@@ -68,38 +59,49 @@ int my_end(char const *sbuff)
     return (0);
 }
 
-char *get_next_line(int fd)
+char *get_current_line(int fd, char *line, int *sizemax)
 {
-    static char *sbuff = NULL;
-    static char *buff = NULL;
-    static int sizemax = 0;
+    char *sbuff = my_strcpy(line);
+    char *buff;
     int size;
 
-    if (buff != NULL) {
-        sbuff = my_strcpy(buff);
-        free(buff);
-    }
-    sizemax = my_strlen(sbuff);
     while (my_end(sbuff) == 0) {
         if ((sbuff != NULL) && (sbuff[0] == '\n'))
             break;
         buff = malloc(sizeof(char) * (READ_SIZE + 1));
         size = read(fd, buff, READ_SIZE);
-        if (size <= 0)
+        if (size <= 0) {
+            free(buff);
             break;
+        }
         buff[size] = '\0';
         sbuff = my_strcat(sbuff, buff);
         free(buff);
-        sizemax = sizemax + size;
     }
-    if (sizemax == 0)
-        sbuff = NULL;
-    if (sbuff != NULL) {
-        if ((my_end(sbuff) == 0) && (sbuff[0] != '\n'))
-            return (sbuff);
-        if ((size = my_end(sbuff)) < sizemax)
-            buff = my_strcpy(&sbuff[size + 1]);
-        sbuff[my_end(sbuff)] = '\0';
-    }
+    if (sbuff != NULL)
+        for (; sbuff[*sizemax] != '\0'; *sizemax = *sizemax + 1);
     return (sbuff);
+}
+
+char *get_next_line(int fd)
+{
+    static char *buff = NULL;
+    char *line = NULL;
+    int sizemax = 0;
+    int endline;
+
+    if (fd < 0)
+        return (NULL);
+    if (buff != NULL) {
+        line = my_strcpy(buff);
+        free(buff);
+    }
+    line = get_current_line(fd, line, &sizemax);
+    if (sizemax == 0)
+        return (NULL);
+    else if ((endline = my_end(line)) < sizemax) {
+        buff = my_strcpy(&line[endline + 1]);
+        line[my_end(line)] = '\0';
+    }
+    return (line);
 }

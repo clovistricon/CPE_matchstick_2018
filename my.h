@@ -17,6 +17,7 @@ char *my_strcpy(char const *src);
 char *my_strcat(char *dest, char const *src);
 int my_strlen(char const *sbuff);
 int my_end(char const *sbuff);
+char *get_current_line(int fd, char *line, int *sizemax);
 char *get_next_line(int fd);
 void my_putchar(char c);
 int my_putstr(char const *str);
