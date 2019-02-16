@@ -11,6 +11,8 @@ int two_l(int line1, int line2, int limit)
     int n = 0;
     int diff = line1 - line2;
 
+    if (limit == 1)
+        return (line1 - 1);
     if (line2 == 1)
         n = 1;
     if (diff <= (limit - n))
