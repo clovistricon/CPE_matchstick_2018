@@ -28,7 +28,7 @@ int nb_line(int *board_game, int nb)
 
 int nmatches_in_too_many_line(int lmax, int lines, int limit, int lines_1)
 {
-    if (((lines - lines_1) == 1) && ((lines % 2) == 0)) {
+    if (((lines - lines_1) == 1) && ((lines % 2) == 1)) {
         if (lmax <= (limit + 2))
             return (((lmax == (limit + 2)) ? (lmax) : (1)));
         else if (lmax > ((limit * 2) + 1))
@@ -36,7 +36,7 @@ int nmatches_in_too_many_line(int lmax, int lines, int limit, int lines_1)
         else
             return (limit + 2);
     }
-    else if ((lines - lines_1) == 1) {
+    else if ((lines - lines_1) == 0) {
         if (lmax <= (limit + 1))
             return (((lmax == (limit + 1)) ? (lmax) : (0)));
         else if (lmax > (limit * 2))
@@ -49,6 +49,7 @@ int nmatches_in_too_many_line(int lmax, int lines, int limit, int lines_1)
 
 int *too_many_1_matches_line(int *board_game, int nb, int limit)
 {
+    int *temp = my_arrcpy(nb, board_game);
     int lines = 0;
     int lines_1 = 0;
     int l_of_1 = 0;
@@ -56,44 +57,48 @@ int *too_many_1_matches_line(int *board_game, int nb, int limit)
     int memo;
 
     for (int i = 0; i < nb; i = i + 1) {
-        lines = ((board_game[i] > 0) ? (lines + 1) : (lines));
-        lines_1 = ((board_game[i] == 1) ? (lines_1 + 1) : (lines_1));
-        l_of_1 = ((board_game[i] == 1) ? (i) : (l_of_1));
-        lmax = ((board_game[i] > board_game[lmax]) ? (i) : (lmax));
+        lines = ((temp[i] > 0) ? (lines + 1) : (lines));
+        lines_1 = ((temp[i] == 1) ? (lines_1 + 1) : (lines_1));
+        l_of_1 = ((temp[i] == 1) ? (i) : (l_of_1));
+        lmax = ((temp[i] > temp[lmax]) ? (i) : (lmax));
     }
-    memo = nmatches_in_too_many_line(board_game[lmax], lines, limit, lines_1);
-    if (memo == board_game[lmax])
-        board_game[l_of_1] = 0;
+    memo = nmatches_in_too_many_line(temp[lmax], lines, limit, lines_1);
+    if (memo == temp[lmax])
+        temp[l_of_1] = 0;
     else
-        board_game[lmax] = memo;
-    return (board_game);
+        temp[lmax] = memo;
+    return (temp);
 }
 
 int *random_line(int *board_game, int nb, int limit)
 {
     int lmax = 0;
+    int *temp = my_arrcpy(nb, board_game);
 
     for (int i = 0; i < nb; i = i + 1) {
-        if (board_game[i] > board_game[lmax])
+        if (temp[i] > temp[lmax])
             lmax = i;
-        if (board_game[i] >= limit) {
-            board_game[i] = board_game[i] - limit;
-            return (board_game);
+        if (temp[i] >= limit) {
+            temp[i] = temp[i] - limit;
+            return (temp);
         }
     }
-    board_game[lmax] = 0;
-    return (board_game);
+    temp[lmax] = 0;
+    return (temp);
 }
 
 int *ai_turn(int nb, int limit, int *board_game)
 {
     int *temp;
+    int *memo = my_arrcpy(nb, board_game);
 
+    for (int i = 0; i < nb; i = i + 1)
+        memo[i] = board_game[i];
     my_putstr("\nAI's turn...\n");
     switch(nb_line(board_game, nb)) {
-        case 1 : temp = win_in_1_line(board_game, limit);
+        case 1 : temp = win_in_1_line(nb, board_game, limit);
             break;
-        case 2 : temp = win_in_2_lines(board_game, limit);
+        case 2 : temp = win_in_2_lines(nb, board_game, limit);
             break;
         case 3 : temp = win_in_3_lines(board_game, nb, limit);
             break;
@@ -101,5 +106,7 @@ int *ai_turn(int nb, int limit, int *board_game)
             break;
         default: temp = random_line(board_game, nb, limit);
     }
+    cmp_boards(nb, memo, temp);
+    free(memo);
     return (temp);
 }

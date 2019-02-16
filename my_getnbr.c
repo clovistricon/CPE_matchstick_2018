@@ -28,10 +28,11 @@ int my_getnbr(char const *str)
 
     if (str[0] == '\0')
         return (0);
-    for (; (str[a] < 48) || (str[a] > 57); a = a + 1);
-    b = a;
+    for (; ((str[a] < 48) || (str[a] > 57)) && str[a] != '\0'; a = a + 1);
     s = a;
-    for (; (str[b] > 47) && (str[b] < 58); b = b + 1);
+    for (b = a; (str[b] > 47) && (str[b] < 58); b = b + 1);
+    if (b == a)
+        return (-1);
     b = b - 1;
     for (; a <= b; a = a + 1) {
         if (((nb + (str[a] - '0')) * my_pow(b - a)) <= 2147483647)

@@ -4,8 +4,8 @@ CC	= gcc
 
 RM	= rm -f
 
-SRCS	= ./AI_matchstick.c \
-	  ./AI_strat.c \
+SRCS	= ./ai_matchstick.c \
+	  ./ai_strat.c \
 	  ./get_next_line.c \
 	  ./matchstick.c \
 	  ./matchstick_player.c \
